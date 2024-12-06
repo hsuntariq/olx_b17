@@ -34,6 +34,11 @@
             transform: translate(-50%, -50%);
         }
 
+        .cat::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
         @media (max-width:780px) {
             .sell-btn {
                 position: fixed !important;
@@ -41,6 +46,36 @@
                 left: 50% !important;
                 transform: translateX(-50%) !important;
             }
+
+
+
+
+
+        }
+
+        @media (max-width:650px) {
+            .my-nav {
+                flex-direction: column !important;
+            }
+
+            .drop-opener {
+                width: 100%;
+            }
+
+            .my-nav input {
+                width: 100% !important;
+            }
+
+            .search-2 {
+                width: 100% !important;
+            }
+
+            .login-btn {
+                position: absolute;
+                top: 35px;
+                right: 10px;
+            }
+
         }
     </style>
     <title>Document</title>
@@ -52,8 +87,18 @@
 
     <?php include './header.php' ?>
     <?php include './nav.php' ?>
+    <?php include './categories.php' ?>
+
+    <!-- ad -->
+    <div class="col-xl-9 col-lg-10 col-11 mx-auto ">
+        <img src="https://images.olx.com.pk/thumbnails/437508562-800x600.webp" width="100%" alt="ad image" class="rounded-3">
+    </div>
 
 
+
+    <!-- show categories -->
+
+    <?php include './show-categories.php' ?>
 
 
 
