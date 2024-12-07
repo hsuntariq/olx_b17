@@ -83,6 +83,7 @@ session_start();
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: all 0.5s ease-in-out;
             z-index: 1000;
+            transform: translateY(300px);
         }
 
         .popup.show {
@@ -134,7 +135,9 @@ session_start();
                 </button>
             </div>
             <div class="popup-body">
-                <p>Your action was successful!</p>
+                <p>
+                    <?php echo $_SESSION['success_category'] ?>
+                </p>
             </div>
         </div>
 
@@ -213,13 +216,28 @@ session_start();
         const closePopup = document.getElementById('closePopup');
 
         // Function to show popup
-        function showPopup() {
-            popup.classList.add('show');
+        //function showPopup() {
+        //    popup.classList.add('show');
+        //}
+
+
+        if (popup) {
+            popup.style.transform = 'translateY(0)'
         }
+
+        if (popup) {
+            setTimeout(() => {
+                popup.style.transform = 'translateY(300px)'
+            }, 3000)
+        }
+
+
+
+
 
         // Function to hide popup
         closePopup.addEventListener('click', () => {
-            popup.classList.remove('show');
+            popup.style.transform = 'translateY(300px)';
         });
     </script>
 

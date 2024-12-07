@@ -5,10 +5,24 @@
 </div>
 <ul class="nav flex-column">
     <li class="nav-item">
-        <a href="#" class="nav-link text-light"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="./admin-dashboard.php" class="nav-link text-light"><i class="bi bi-speedometer2"></i> Dashboard</a>
     </li>
     <li class="nav-item">
-        <a href="#" class="nav-link text-light"><i class="bi bi-widgets"></i> Widgets</a>
+        <a href="/" class="nav-link text-light"><i class="bi bi-speedometer2"></i> Home</a>
+    </li>
+    <li class="nav-item ">
+
+        <div class="dropdown ms-3">
+            <span class=" dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-list"></i> Categories
+            </span>
+            <ul class="dropdown-menu">
+                <li><a href="./add-category.php" class="nav-link text-dark "><i class="bi bi-list text-white"></i> Add Category</a></li>
+                <li><a href="./add-category.php" class="nav-link text-dark"><i class="bi bi-list text-white"></i> Show Category</a></li>
+
+            </ul>
+        </div>
+
     </li>
     <li class="nav-item">
         <a href="#" class="nav-link text-light"><i class="bi bi-box"></i> Elements</a>
