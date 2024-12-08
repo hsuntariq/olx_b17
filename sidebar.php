@@ -18,7 +18,21 @@
             </span>
             <ul class="dropdown-menu">
                 <li><a href="./add-category.php" class="nav-link text-dark "><i class="bi bi-list text-white"></i> Add Category</a></li>
-                <li><a href="./add-category.php" class="nav-link text-dark"><i class="bi bi-list text-white"></i> Show Category</a></li>
+                <li><a href="./admin-show-category.php" class="nav-link text-dark"><i class="bi bi-list text-white"></i> Show Category</a></li>
+
+            </ul>
+        </div>
+
+    </li>
+    <li class="nav-item ">
+
+        <div class="dropdown ms-3">
+            <span class=" dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-list"></i> Products
+            </span>
+            <ul class="dropdown-menu">
+                <li><a href="./add-product.php" class="nav-link text-dark "><i class="bi bi-list text-white"></i> Add Product</a></li>
+                <li><a href="./admin-show-product.php" class="nav-link text-dark"><i class="bi bi-list text-white"></i> Show Product</a></li>
 
             </ul>
         </div>

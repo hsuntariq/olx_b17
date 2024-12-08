@@ -16,12 +16,21 @@ move_uploaded_file($tmpName, './category_images/' . $filename);
 
 $insert = "INSERT INTO category (name,description,color,image) VALUES ('{$name}','{$decription}','{$color}','{$filename}')";
 
+
+try {
+    mysqli_query($connection, $insert);
+    // set a session for success message
+    $_SESSION['success_category'] = 'Category added successfully!';
+} catch (Exception $e) {
+    if ($e->getCode() == 1062) {
+        $_SESSION['duplicate_entry'] = 'Category already exists';
+    }
+}
+
 // execute the query
-mysqli_query($connection, $insert);
 
-// set a session for success message
 
-$_SESSION['success_category'] = 'Category added successfully!';
+
 
 
 

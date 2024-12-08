@@ -124,7 +124,7 @@ session_start();
 
 
     <?php
-    if (isset($_SESSION['success_category'])) {
+    if (isset($_SESSION['success_product'])) {
     ?>
 
         <div class="popup" id="popup">
@@ -136,7 +136,7 @@ session_start();
             </div>
             <div class="popup-body">
                 <p>
-                    <?php echo $_SESSION['success_category'] ?>
+                    <?php echo $_SESSION['success_product'] ?>
                 </p>
             </div>
         </div>
@@ -144,32 +144,7 @@ session_start();
     <?php
     }
 
-    unset($_SESSION['success_category'])
-
-
-    ?>
-    <?php
-    if (isset($_SESSION['duplicate_entry'])) {
-    ?>
-
-        <div class="popup" id="popup" style="background: red;">
-            <div class="popup-header">
-                <h4>Notification</h4>
-                <button class="close-btn" id="closePopup">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="popup-body">
-                <p>
-                    <?php echo $_SESSION['duplicate_entry'] ?>
-                </p>
-            </div>
-        </div>
-
-    <?php
-    }
-
-    unset($_SESSION['duplicate_entry'])
+    unset($_SESSION['success_product'])
 
 
     ?>
@@ -189,37 +164,68 @@ session_start();
                 <div class="container  p-4 d-flex  justify-content-center">
                     <div class="form-container col-lg-7 shadow p-4 rounded-3">
                         <div class="form-header">
-                            <img src="https://via.placeholder.com/150" alt="Category Icon">
-                            <h2>Add New Category</h2>
+                            <img src="https://via.placeholder.com/150" alt="product Icon">
+                            <h2>Add New Product</h2>
                         </div>
-                        <form action="./add-category-data.php" method="POST" enctype="multipart/form-data">
+                        <form action="./add-product-data.php" method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
-                                <label for="categoryName" class="form-label">
-                                    <i class="fas fa-tag"></i> Category Name
+                                <label for="productName" class="form-label">
+                                    <i class="fas fa-tag"></i> product Name
                                 </label>
-                                <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="Enter category name" required>
+                                <input type="text" class="form-control" id="productName" name="productName" placeholder="Enter product name" required>
                             </div>
                             <div class="mb-3">
-                                <label for="colorName" class="form-label">
-                                    <i class="fas fa-droplet"></i> Color Name
+                                <label for="productPrice" class="form-label">
+                                    <i class="fas fa-tag"></i> product Price
                                 </label>
-                                <input type="color" class="form-control" id="categoryName" name="colorName" placeholder="Enter category name" required>
+                                <input type="number" class="form-control" id="productPrice" name="productPrice" placeholder="Enter product price" required>
                             </div>
                             <div class="mb-3">
-                                <label for="categoryDescription" class="form-label">
+                                <label for="">
+                                    Category
+                                </label>
+                                <select name="product_category" id="" class="form-control">
+                                    <option value="" selected disabled>Select category</option>
+                                    <?php
+                                    include './config.php';
+                                    $select = "SELECT * FROM category";
+                                    $result = mysqli_query($connection, $select);
+                                    foreach ($result as $item) {
+                                    ?>
+
+                                        <option value="<?php echo $item['id'] ?>">
+                                            <?php echo $item['name'] ?>
+                                        </option>
+
+                                    <?php
+                                    }
+                                    ?>
+
+                                </select>
+
+
+                            </div>
+                            <div class="mb-3">
+                                <label for="productDescription" class="form-label">
                                     <i class="fas fa-pen"></i> Description
                                 </label>
-                                <textarea class="form-control" id="categoryDescription" name="categoryDescription" rows="3" placeholder="Write a brief description" required></textarea>
+                                <textarea class="form-control" id="productDescription" name="productDescription" rows="3" placeholder="Write a brief description" required></textarea>
                             </div>
                             <div class="mb-3">
-                                <label for="categoryImage" class="form-label">
+                                <label for="productLocation" class="form-label">
+                                    <i class="fas fa-pen"></i> Location
+                                </label>
+                                <textarea class="form-control" id="productLocation" name="productLocation" rows="3" placeholder="Write a brief Location" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productImage" class="form-label">
                                     <i class="fas fa-image"></i> Upload Image
                                 </label>
-                                <input type="file" class="form-control" id="categoryImage" name="categoryImage" accept="image/*" required>
+                                <input type="file" multiple class="form-control" id="productImage" name="productImage[]" accept="image/*" required>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn w-100 btn-primary">
-                                    <i class="fas fa-plus-circle"></i> Add Category
+                                    <i class="fas fa-plus-circle"></i> Add product
                                 </button>
                             </div>
                         </form>
