@@ -205,54 +205,11 @@ session_start()
 <body>
 
     <?php
-    if (isset($_SESSION['delete_category'])) {
-    ?>
-
-        <div class="popup" id="popup">
-            <div class="popup-header">
-                <h4>Notification</h4>
-                <button class="close-btn" id="closePopup">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="popup-body">
-                <p>
-                    <?php echo $_SESSION['delete_category'] ?>
-                </p>
-            </div>
-        </div>
-
-    <?php
-    }
-
-    unset($_SESSION['delete_category'])
-
-
-    ?>
-    <?php
-    if (isset($_SESSION['update_success'])) {
-    ?>
-
-        <div class="popup" id="popup">
-            <div class="popup-header">
-                <h4>Notification</h4>
-                <button class="close-btn" id="closePopup">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="popup-body">
-                <p>
-                    <?php echo $_SESSION['update_success'] ?>
-                </p>
-            </div>
-        </div>
-
-    <?php
-    }
-
-    unset($_SESSION['update_success'])
-
-
+    include './showPopUp.php';
+    showPopup('delete_category');
+    showPopup('update_success');
+    showPopup('delete_product');
+    showPopup('update_success_prod');
     ?>
     <div class="container-fluid">
         <div class="row">
@@ -281,28 +238,151 @@ session_start()
                             </thead>
                             <tbody>
                                 <!-- Example Row -->
-                                <tr>
-                                    <td>1</td>
-                                    <td><img src="https://via.placeholder.com/80" class="product-image img-fluid" alt="Product"></td>
-                                    <td>Stylish Chair</td>
-                                    <td>$120</td>
-                                    <td class="d-none d-md-table-cell text-wrap">A comfortable and stylish chair for your living room.</td>
-                                    <td class="d-none d-lg-table-cell">New York</td>
-                                    <td>Furniture</td>
-                                    <td>
-                                        <div class="d-flex gap-2 align-items-center justify-content-around">
-                                            <button class="btn btn-view d-flex gap-1 align-items-center">
-                                                <i class="fas fa-eye"></i> View
-                                            </button>
-                                            <button class="btn btn-edit d-flex gap-1 align-items-center" data-bs-toggle="modal" data-bs-target="#updateModal">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </button>
-                                            <button class="btn btn-delete d-flex gap-1 align-items-center">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
+                                <?php
+
+                                include './config.php';
+                                $select = "SELECT product.id AS product_id,product.name AS product_name,product.location,product.image,product.price,product.description,category.id AS category_id,category.name AS category_name FROM product JOIN category ON product.c_id = category.id";
+                                $result = mysqli_query($connection, $select);
+                                foreach ($result as $item) {
+                                    $images = explode(',', $item['image']);
+                                ?>
+                                    <tr>
+                                        <td><?php echo $item['product_id'] ?></td>
+                                        <td><img src="./product_images/<?php echo $images[0] ?>" class="product-image img-fluid mx-auto d-block" alt="Product" height="100px" width="100px"></td>
+                                        <td>
+                                            <?php echo $item['product_name'] ?>
+                                        </td>
+                                        <td>Rs. <?php echo $item['price'] ?> </td>
+                                        <td class="d-none d-md-table-cell text-wrap"><?php echo $item['description'] ?></td>
+                                        <td class="d-none d-lg-table-cell"><?php echo $item['location'] ?></td>
+                                        <td>
+                                            <?php echo $item['category_name'] ?>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-2 align-items-center justify-content-around">
+                                                <!-- View Button -->
+                                                <button class="btn btn-view d-flex gap-1 align-items-center"
+                                                    onclick="openViewModal(this)"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#viewModal"
+                                                    data-id="<?php echo $item['product_id']; ?>"
+                                                    data-name="<?php echo $item['product_name']; ?>"
+                                                    data-price="<?php echo $item['price']; ?>"
+                                                    data-image="./product_images/<?php echo $images[0]; ?>"
+                                                    data-category="<?php echo $item['category_name']; ?>"
+                                                    data-location="<?php echo $item['location']; ?>"
+                                                    data-description="<?php echo $item['description']; ?>">
+                                                    <i class="fas fa-eye"></i> View
+                                                </button>
+
+                                                <!-- Edit Button -->
+                                                <button class="btn btn-edit d-flex gap-1 align-items-center"
+                                                    onclick="openEditModal(this)"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editModal"
+                                                    data-id="<?php echo $item['product_id']; ?>"
+                                                    data-name="<?php echo $item['product_name']; ?>"
+                                                    data-price="<?php echo $item['price']; ?>"
+                                                    data-category="<?php echo $item['category_id']; ?>"
+                                                    data-location="<?php echo $item['location']; ?>"
+                                                    data-description="<?php echo $item['description']; ?>">
+                                                    <i class="fas fa-edit"></i> Edit
+                                                </button>
+
+                                                <a href="./delete-product.php?id=<?php echo $item['product_id'] ?>&name=<?php echo $item['product_name'] ?>" class="btn btn-delete d-flex gap-1 align-items-center">
+                                                    <i class="fas fa-trash"></i> Delete
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="viewModalLabel">View Product Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <img id="viewImage" src="" alt="Product Image" class="img-fluid rounded">
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <h4 id="viewProductName"></h4>
+                                                            <p><strong>Price:</strong> <span id="viewPrice"></span></p>
+                                                            <p><strong>Category:</strong> <span id="viewCategory"></span></p>
+                                                            <p><strong>Location:</strong> <span id="viewLocation"></span></p>
+                                                            <p><strong>Description:</strong></p>
+                                                            <p id="viewDescription"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </td>
-                                </tr>
+                                    </div>
+
+                                    <!-- Edit Modal -->
+                                    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form id="editForm" action="./update-product.php" method="post" enctype="multipart/form-data">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" id="editProductId" name="product_id">
+                                                        <div class="mb-3">
+                                                            <label for="editProductName" class="form-label">Product Name</label>
+                                                            <input type="text" class="form-control" id="editProductName" name="product_name" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="editPrice" class="form-label">Price</label>
+                                                            <input type="number" class="form-control" id="editPrice" name="price" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="editCategory" class="form-label">Category</label>
+                                                            <select class="form-select" id="editCategory" name="category" required>
+                                                                <?php
+                                                                include './config.php';
+                                                                $select2 = "SELECT * FROM category";
+                                                                $res2 = mysqli_query($connection, $select2);
+                                                                foreach ($res2 as $item2) {
+                                                                ?>
+
+                                                                    <option value="<?php echo $item2['id'] ?>">
+                                                                        <?php echo $item2['name'] ?>
+                                                                    </option>
+
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="editLocation" class="form-label">Location</label>
+                                                            <input type="text" class="form-control" id="editLocation" name="location">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="editDescription" class="form-label">Description</label>
+                                                            <textarea class="form-control" id="editDescription" name="description" rows="3"></textarea>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+
+
+
+
                                 <!-- Repeat Rows Dynamically Here -->
                             </tbody>
                         </table>
@@ -338,6 +418,52 @@ session_start()
 
         })
 
+
+
+
+
+        function openViewModal(button) {
+            let id = button.getAttribute('data-id')
+            let name = button.getAttribute('data-name')
+            let price = button.getAttribute('data-price')
+            let image = button.getAttribute('data-image')
+            let category = button.getAttribute('data-category')
+            let location = button.getAttribute('data-location')
+            let description = button.getAttribute('data-description')
+            document.querySelector('#viewImage').src = image
+            document.querySelector('#viewPrice').textContent = price
+            document.querySelector('#viewCategory').textContent = category
+            document.querySelector('#viewLocation').textContent = location
+            document.querySelector('#viewDescription').textContent = description
+
+
+
+
+        }
+
+
+
+
+
+        function openEditModal(button) {
+            let id = button.getAttribute('data-id')
+            let name = button.getAttribute('data-name')
+            let price = button.getAttribute('data-price')
+            let image = button.getAttribute('data-image')
+            let category = button.getAttribute('data-category')
+            let location = button.getAttribute('data-location')
+            let description = button.getAttribute('data-description')
+            document.querySelector('#editProductId').value = id
+            document.querySelector('#editProductName').value = name
+            document.querySelector('#editPrice').value = price
+            document.querySelector('#editLocation').value = location
+
+            document.querySelector('#editDescription').value = description
+
+
+
+
+        }
 
 
 

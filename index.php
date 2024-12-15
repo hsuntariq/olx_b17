@@ -99,6 +99,11 @@
     <!-- show categories -->
 
     <?php include './show-categories.php' ?>
+    <?php include './show-my-products.php' ?>
+
+
+
+
 
 
 
